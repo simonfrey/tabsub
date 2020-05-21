@@ -1,0 +1,166 @@
+<html>
+
+<head>
+    <title>TabSub - Offline Javascript PubSub between browser tabs using local storage</title>
+
+    <style>
+        html {
+            background-color: #272822;
+            color: #f8f8f2;
+            font-family: 'Lucida Console', Monaco, monospace;
+            padding:1em;
+        }
+        a {
+            color:#f8f8f2;
+        }
+
+        body {
+            width: 90%;
+            max-width: 600px;
+            margin: auto;
+
+        }
+        h1,
+        h2,
+        h3,h4 {
+            padding:0.2em;
+        }
+        h1,
+        h2,
+        h3 {
+            text-align: center;
+        }
+
+
+        h2{
+           background-color:#f8f8f2;
+           color:#272822;
+        }
+        h3 {
+            border:2px solid #f8f8f2;
+        }
+
+        h4 {
+            border:1px dotted #f8f8f2;
+        }
+
+        audio{
+            width: 100%;
+        }
+
+        pre{
+            background-color:rgba(0,0,0,0.1);
+            padding:1em;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>TabSub</h1>
+    <h2>Offline Javascript PubSub between browser tabs</h2>
+    <p>TabSub offers you an easy to use Javascript PubSub via local storage. No server is required as all messages are shared via the browser built in local storage.</p>
+    <p>Give the example a try to see what you can build with TabSub.</p>
+    <p>Is this safe for a lot of concurrent writes? To be honest I have no clue. I tried to break it with 10 concurrent writers and everything worked as expected: No message got lost and the messages where in correct order. No warranty here, use at your own risk 😅</p>
+    <p>As TabSub uses local store this only works on the same domain, as the browser separates the local storage by domains as security measure.</p>
+    <p>TabSub is on <a href="">Github</a> and licensed <a href="">MIT</a></p>
+
+    <h2>Example</h2>
+    <p>Start one of the two songs and than open this site in a second tab. You will see that the playing song time syncs and if you start the other song that the first one stops.</p>
+    <p>Look into the source code of this site to see how I used TabSub to built this example.</p>
+    <div>
+        <h4>Sad Circus</h4>
+        <audio controls id="sadCircus">
+            <source src="mp3/sad_circurs.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+    </div>
+
+    <div>
+        <h4>They say</h4>
+        <audio controls id="theySay">
+            <source src="mp3/they_say.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+    <h2>Usage</h2>
+    <h3>Including the script</h3>
+    <pre><span style='color:#d2cd86; '>&lt;</span>script src<span style='color:#d2cd86; '>=</span><span style='color:#02d045; '>"</span><span style='color:#00c4c4; '>https://simon-frey.com/tabsub/tabsub.v1.min.js</span><span style='color:#02d045; '>"</span><span style='color:#d2cd86; '>></span><span style='color:#d2cd86; '>&lt;</span><span style='color:#d2cd86; '>/</span>script<span style='color:#d2cd86; '>></span></pre>
+    <!--Created using ToHtml.com on 2019-11-11 23:22:47 UTC -->
+    <h3>Initialization</h3>
+    <pre>
+<span style='color:#d2cd86; '>&lt;</span>script<span style='color:#d2cd86; '>></span>
+    <span style='color:#e66170; font-weight:bold; '>const</span> ts <span style='color:#d2cd86; '>=</span> <span style='color:#e66170; font-weight:bold; '>new</span> TabSub<span style='color:#d2cd86; '>(</span><span style='color:#d2cd86; '>)</span><span style='color:#b060b0; '>;</span>
+<span style='color:#d2cd86; '>&lt;</span><span style='color:#d2cd86; '>/</span>script<span style='color:#d2cd86; '>></span></pre>
+      <!--Created using ToHtml.com on 2020-05-21 16:58:00 UTC -->
+    <h3>Available functions</h3>
+
+    <h4>publish(topic,msg)</h4>
+    <p>Publish new message. The message can be of any type. Your callback in subscribe has to handle it correctly. TabSub does not take care about that.</p>
+<pre>
+<span style='color:#d2cd86; '>&lt;</span>script<span style='color:#d2cd86; '>></span>
+    ts<span style='color:#d2cd86; '>.</span>publish<span style='color:#d2cd86; '>(</span><span style='color:#02d045; '>"</span><span style='color:#00c4c4; '>hello</span><span style='color:#02d045; '>"</span><span style='color:#d2cd86; '>,</span><span style='color:#02d045; '>"</span><span style='color:#00c4c4; '>world</span><span style='color:#02d045; '>"</span><span style='color:#d2cd86; '>)</span><span style='color:#b060b0; '>;</span>
+<span style='color:#d2cd86; '>&lt;</span><span style='color:#d2cd86; '>/</span>script<span style='color:#d2cd86; '>></span></pre>
+      <!--Created using ToHtml.com on 2020-05-21 16:59:22 UTC -->
+    <h4>subscribe(topic, callback)</h4>
+    <p>Register new listener. Callback is called with the message content if new message arrives</p>
+<pre>
+<span style='color:#d2cd86; '>&lt;</span>script<span style='color:#d2cd86; '>></span>
+    ts<span style='color:#d2cd86; '>.</span>subscribe<span style='color:#d2cd86; '>(</span><span style='color:#02d045; '>"</span><span style='color:#00c4c4; '>hello</span><span style='color:#02d045; '>"</span><span style='color:#d2cd86; '>,</span><span style='color:#d2cd86; '>(</span>msg<span style='color:#d2cd86; '>)</span><span style='color:#d2cd86; '>=</span><span style='color:#d2cd86; '>></span><span style='color:#b060b0; '>{</span>
+        console<span style='color:#d2cd86; '>.</span><span style='color:#e66170; font-weight:bold; '>log</span><span style='color:#d2cd86; '>(</span><span style='color:#02d045; '>"</span><span style='color:#00c4c4; '>Got msg: </span><span style='color:#02d045; '>"</span><span style='color:#d2cd86; '>,</span>msg<span style='color:#d2cd86; '>)</span><span style='color:#b060b0; '>;</span>
+    <span style='color:#b060b0; '>}</span><span style='color:#d2cd86; '>)</span><span style='color:#b060b0; '>;</span>
+<span style='color:#d2cd86; '>&lt;</span><span style='color:#d2cd86; '>/</span>script<span style='color:#d2cd86; '>></span></pre>
+      <!--Created using ToHtml.com on 2020-05-21 17:00:31 UTC -->
+    <h4>state(topic)</h4>
+    <p>Get the current (static) state of a topic. Returns the current data in the local storage for this topic</p>
+<pre>
+<span style='color:#d2cd86; '>&lt;</span>script<span style='color:#d2cd86; '>></span>
+    <span style='color:#e66170; font-weight:bold; '>const</span> state <span style='color:#d2cd86; '>=</span> ts<span style='color:#d2cd86; '>.</span>state<span style='color:#d2cd86; '>(</span><span style='color:#02d045; '>"</span><span style='color:#00c4c4; '>hello</span><span style='color:#02d045; '>"</span><span style='color:#d2cd86; '>)</span><span style='color:#b060b0; '>;</span>
+    console<span style='color:#d2cd86; '>.</span><span style='color:#e66170; font-weight:bold; '>log</span><span style='color:#d2cd86; '>(</span><span style='color:#02d045; '>"</span><span style='color:#00c4c4; '>Current state: </span><span style='color:#02d045; '>"</span><span style='color:#d2cd86; '>,</span>msg<span style='color:#d2cd86; '>)</span><span style='color:#b060b0; '>;</span>
+<span style='color:#d2cd86; '>&lt;</span><span style='color:#d2cd86; '>/</span>script<span style='color:#d2cd86; '>></span></pre>
+      <!--Created using ToHtml.com on 2020-05-21 17:01:40 UTC -->
+    <h4>Find my other projects on <a href="https://simon-frey.com/">simon-frey.com</a></h4>
+    <script src="tabsub.v1.min.js"></script>
+    <script>
+        const ts = new TabSub();
+        
+        var x = document.querySelectorAll("audio");
+        var i;
+        for (i = 0; i < x.length; i++) {
+            const elem = x[i];
+            elem.onplay = function () {
+                if (ts.state("songPlaying") == elem.id){
+                    elem.pause()
+                    return
+                }
+                ts.publish("songPlaying", elem.id)
+            }
+            elem.onpause = function () {
+                if (ts.state("songPlaying") != elem.id){
+                    return
+                }
+                ts.publish("songPlaying",undefined)
+            }
+
+            elem.ontimeupdate = function (e) {
+                if (elem.paused){
+                    return
+                }
+                ts.publish(elem.id+"_time",elem.currentTime)
+            }
+            ts.subscribe(elem.id+"_time", (data) => {
+                if (!elem.paused){
+                    return
+                }
+               elem.currentTime = data;
+            })
+            ts.subscribe("songPlaying", (data) => {
+                if (data != elem.id) {
+                    elem.pause()
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>
